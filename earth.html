@@ -325,7 +325,7 @@
                     image(rocketImg, -150, -150, 300, 300);
                 }
                 pop();
-                rocketY += 4;
+                rocketY += 6; // Increased speed from 4 to 6
                 if (rocketY >= height - 150) {
                     rocketAnimating = false;
                     characterX = rocketX + 150;
@@ -456,7 +456,7 @@
                                 } else if (item.zoomTimer <= item.zoomDuration / 3 + item.holdDuration) {
                                     item.scale = 1.1; // Hold zoom
                                 } else if (item.zoomTimer <= item.zoomDuration + item.holdDuration) {
-                                    item.scale = lerp(1.1, 1, (item.zoomTimer - item.zoomDuration / 3 - item.holdDuration) / (2 * item.zoomDuration / 3)); // Zoom out
+                                    item.scale = lerp(1.1, 1, (item.zoomTimer - tree.zoomDuration / 3 - item.holdDuration) / (2 * item.zoomDuration / 3)); // Zoom out
                                 } else {
                                     item.zoomTimer = 0;
                                     item.scale = 1;
