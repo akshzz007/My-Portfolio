@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mars - Projects</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            background: black;
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            font-family: 'Comic Neue', cursive;
+        }
+        canvas {
+            display: block;
+        }
+        .info-text {
+            position: absolute;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            text-align: left;
+            z-index: 10;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 8px 12px;
+            border-radius: 8px;
+            max-width: 280px;
+            white-space: pre-wrap;
+        }
+        .info-text.visible {
+            opacity: 1;
+        }
+        .link-button, .back-button {
+            position: absolute;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 10;
+            padding: 6px 12px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            font-family: 'Comic Neue', cursive;
+        }
+        .link-button.visible, .back-button.visible {
+            opacity: 1;
+        }
+        .link-button:hover, .back-button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        #back-button {
+            top: 20px;
+            left: 20px;
+        }
+        #controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            gap: 40px;
+        }
+        #controls button {
+            padding: 10px;
+            font-size: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+        #controls button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <button id="back-button" class="back-button visible" onclick="window.location.href='index.html?planet=mars'">Back</button>
+    <div id="controls">
+        <button onclick="moveBackward()">◀</button>
+        <button onclick="moveForward()">▶</button>
+    </div>
+    <script>
+        let rocketImg, forwardImgs = [], backwardImgs = [], backgroundImg, shootImg, studyImg, mentalImg;
+        let rocketX, rocketY;
+        let characterX, characterY;
+        let rocketAnimating = true;
+        let frameCounter = 0;
+        let walkCounter = 0;
+        let walkFrame = 0;
+        let facingRight = true;
+        let currentCharacter;
+        let stops = [];
+        let currentStopIndex = 0;
+        let isMoving = false;
+        let shoot = null;
+        let study = null;
+        let mental = null;
+        let cameraX = 0;
+        let targetCameraX = 0;
+        let worldWidth = 6000;
+        let projectDistance = 750; // 20cm ≈ 750 pixels
+        let normalSpeed = 1.5; // Normal walking speed
+        let fastSpeed = 3; // Fast walking speed when holding arrow keys
+
+        function preload() {
+            backgroundImg = loadImage('assets/mar.jpg', null, () => console.error('Failed to load mar.jpg'));
+            rocketImg = loadImage('assets/rocket.png', null, () => console.error('Failed to load rocket.png'));
+            forwardImgs[0] = loadImage('assets/stand.png', null, () => console.error('Failed to load stand.png'));
+            forwardImgs[1] = loadImage('assets/knee.png', null, () => console.error('Failed to load knee.png'));
+            forwardImgs[2] = loadImage('assets/walking.png', null, () => console.error('Failed to load walking.png'));
+            backwardImgs[0] = loadImage('assets/lat1.png', null, () => console.error('Failed to load lat1.png'));
+            backwardImgs[1] = loadImage('assets/lat2.png', null, () => console.error('Failed to load lat2.png'));
+            backwardImgs[2] = loadImage('assets/lat3.png', null, () => console.error('Failed to load lat3.png'));
+            shootImg = loadImage('assets/shoot.png', null, () => console.error('Failed to load shoot.png'));
+            studyImg = loadImage('assets/study.png', null, () => console.error('Failed to load study.png'));
+            mentalImg = loadImage('assets/mental.png', null, () => console.error('Failed to load mental.png'));
+        }
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            rocketX = 100;
+            rocketY = -100;
+            characterX = rocketX + 150;
+            characterY = height - 110;
+            currentCharacter = forwardImgs[0] || createImage(1, 1);
+
+            stops = [
+                100, // Starting point
+                100 + projectDistance, // Shoot
+                100 + projectDistance * 2, // Study
+                100 + projectDistance * 3 // Mental
+            ];
+
+            worldWidth = stops[stops.length - 1] + 500;
+
+            shoot = {
+                x: stops[1],
+                y: height - 294,
+                size: 294,
+                image: shootImg,
+                visible: false,
+                text: "🔫 Shooting Game\n'Shoot the blocks. Beat the boredom!'\nMy very first game project(ik very basic)! Reflex-based shooter where you pop red and yellow blocks, but miss 5 — and it’s Game Over. Made with pure HTML, CSS, and JavaScript.",
+                elementId: 'info-text-shoot',
+                buttonId: 'button-shoot',
+                buttonText: 'Play here',
+                buttonUrl: 'https://akshzz007.github.io/Shooting-Game/',
+                visited: false,
+                scale: 1,
+                zoomTimer: 0,
+                zoomDuration: 60,
+                holdDuration: 30
+            };
+
+            study = {
+                x: stops[2],
+                y: height - 294,
+                size: 294,
+                image: studyImg,
+                visible: false,
+                text: "📚 AceHub – Study Buddy Finder\n'Don’t study alone — find your tribe!'\nMade during Techneon Hackathon, AceHub helps students find like-minded partners to study smarter. Frontend-powered with Google Cloud magic, no backend needed!",
+                elementId: 'info-text-study',
+                buttonId: 'button-study',
+                buttonText: 'Explore AceHub',
+                buttonUrl: 'https://deluxe-buttercream-1e5cfa.netlify.app/',
+                visited: false,
+                scale: 1,
+                zoomTimer: 0,
+                zoomDuration: 60,
+                holdDuration: 30
+            };
+
+            mental = {
+                x: stops[3],
+                y: height - 294,
+                size: 294,
+                image: mentalImg,
+                visible: false,
+                text: "🧠 Mental Health Bot\n'Your mood, our mission!'\nA cute AI web app that detects your emotions via webcam and supports you with a smart chatbot, games, breathing exercises, and relaxing music. Click ‘Start Now’ and let the camera do the magic!",
+                elementId: 'info-text-mental',
+                buttonId: 'button-mental',
+                buttonText: 'Start Now',
+                buttonUrl: 'https://akshzz007.github.io/mental-health-bot/',
+                visited: false,
+                scale: 1,
+                zoomTimer: 0,
+                zoomDuration: 60,
+                holdDuration: 30
+            };
+
+            [shoot, study, mental].forEach(item => {
+                let textDiv = document.createElement('div');
+                textDiv.id = item.elementId;
+                textDiv.className = 'info-text';
+                textDiv.textContent = item.text;
+                document.body.appendChild(textDiv);
+
+                let button = document.createElement('button');
+                button.id = item.buttonId;
+                button.className = 'link-button';
+                button.textContent = item.buttonText;
+                button.onclick = () => window.open(item.buttonUrl, '_blank');
+                document.body.appendChild(button);
+            });
+        }
+
+        function draw() {
+            frameCounter++;
+            targetCameraX = constrain(characterX - width / 2, 0, worldWidth - width);
+            cameraX = lerp(cameraX, targetCameraX, 0.1);
+
+            let bgWidth = 1920;
+            let bgHeight = 1080;
+            let scaleFactor = max(width / bgWidth, height / bgHeight);
+            if (backgroundImg) {
+                push();
+                resetMatrix();
+                image(backgroundImg, 0, 0, bgWidth * scaleFactor, bgHeight * scaleFactor);
+                pop();
+            } else {
+                push();
+                resetMatrix();
+                fill(0);
+                rect(0, 0, width, height);
+                pop();
+            }
+
+            translate(-cameraX, 0);
+
+            if (rocketAnimating) {
+                push();
+                translate(rocketX, rocketY);
+                if (rocketImg) {
+                    image(rocketImg, -150, -150, 300, 300);
+                }
+                pop();
+                rocketY += 4;
+                if (rocketY >= height - 150) {
+                    rocketAnimating = false;
+                    characterX = rocketX + 150;
+                    currentStopIndex = 1; // Start at first project (shoot)
+                    facingRight = characterX < stops[currentStopIndex]; // Face toward first stop
+                }
+            } else {
+                push();
+                translate(rocketX, height - 150);
+                if (rocketImg) {
+                    image(rocketImg, -150, -150, 300, 300);
+                }
+                pop();
+
+                let targetX = stops[currentStopIndex];
+                let speed = normalSpeed;
+                if (keyIsDown(RIGHT_ARROW) || keyIsDown(LEFT_ARROW)) {
+                    speed = fastSpeed; // Increase speed when holding arrow keys
+                }
+                if (Math.abs(characterX - targetX) > speed) {
+                    characterX += characterX < targetX ? speed : -speed;
+                    facingRight = characterX < targetX;
+                    isMoving = true;
+                    walkCounter++;
+                    if (walkCounter % 10 === 0) {
+                        walkFrame = (walkFrame + 1) % 3;
+                    }
+                    let walkImages = facingRight ? [forwardImgs[2], forwardImgs[1], forwardImgs[0]] : [backwardImgs[1], backwardImgs[2], backwardImgs[0]];
+                    currentCharacter = walkImages[walkFrame];
+                } else {
+                    characterX = targetX;
+                    isMoving = false;
+                    currentCharacter = facingRight ? forwardImgs[0] : backwardImgs[0];
+                }
+
+                [shoot, study, mental].forEach(item => {
+                    if (item) {
+                        if (!item.visible && characterX >= stops[stops.indexOf(item.x) - 1]) {
+                            item.visible = true;
+                        }
+                        if (item.visible) {
+                            let distance = Math.abs(characterX - item.x);
+                            let infoText = document.getElementById(item.elementId);
+                            let button = document.getElementById(item.buttonId);
+                            if (distance < 50 && !item.visited) {
+                                item.visited = true;
+                                item.zoomTimer = 1; // Start zoom animation
+                            }
+                            if (item.zoomTimer > 0) {
+                                item.zoomTimer++;
+                                if (item.zoomTimer <= item.zoomDuration / 3) {
+                                    item.scale = lerp(1, 1.1, item.zoomTimer / (item.zoomDuration / 3)); // Zoom in
+                                } else if (item.zoomTimer <= item.zoomDuration / 3 + item.holdDuration) {
+                                    item.scale = 1.1; // Hold zoom
+                                } else if (item.zoomTimer <= item.zoomDuration + item.holdDuration) {
+                                    item.scale = lerp(1.1, 1, (item.zoomTimer - item.zoomDuration / 3 - item.holdDuration) / (2 * item.zoomDuration / 3)); // Zoom out
+                                } else {
+                                    item.zoomTimer = 0;
+                                    item.scale = 1;
+                                }
+                            }
+                            if (item.visited) {
+                                infoText.classList.add('visible');
+                                infoText.style.left = `${item.x - cameraX + item.size / 2 + 20}px`;
+                                infoText.style.top = `${item.y - item.size / 2 - 180}px`;
+                                button.classList.add('visible');
+                                button.style.left = `${item.x - cameraX - 50}px`; // Center horizontally on image
+                                button.style.top = `${item.y - item.size / 2 - 50}px`; // Near top of image
+                            }
+
+                            push();
+                            translate(item.x, item.y);
+                            scale(item.scale);
+                            image(item.image, -item.size / 2, -item.size / 2, item.size, item.size);
+                            pop();
+                        }
+                    }
+                });
+
+                push();
+                translate(characterX, characterY);
+                if (currentCharacter) {
+                    image(currentCharacter, -110, -110, 220, 220);
+                }
+                pop();
+            }
+        }
+
+        function keyPressed() {
+            if (!rocketAnimating && !isMoving) {
+                if (keyCode === RIGHT_ARROW) {
+                    moveForward();
+                } else if (keyCode === LEFT_ARROW) {
+                    moveBackward();
+                }
+            }
+        }
+
+        function moveForward() {
+            if (!rocketAnimating && !isMoving) {
+                currentStopIndex = min(currentStopIndex + 1, stops.length - 1);
+            }
+        }
+
+        function moveBackward() {
+            if (!rocketAnimating && !isMoving) {
+                currentStopIndex = max(currentStopIndex - 1, 0);
+            }
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+            characterY = height - 110;
+            if (!rocketAnimating) {
+                rocketY = height - 150;
+            }
+            if (shoot) {
+                shoot.y = height - shoot.size;
+            }
+            if (study) {
+                study.y = height - study.size;
+            }
+            if (mental) {
+                mental.y = height - mental.size;
+            }
+        }
+    </script>
+</body>
+</html>

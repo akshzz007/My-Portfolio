@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jupiter - Experience</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            background: url('assets/jupiter.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            color: white;
+            overflow: hidden;
+        }
+
+        .glitch {
+            position: relative;
+            display: inline-block;
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+            animation: glitch 2s linear infinite;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .glitch::before {
+            color: cyan;
+            animation: glitch-left 2s linear infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+        }
+        .glitch::after {
+            color: magenta;
+            animation: glitch-right 2s linear infinite;
+            clip-path: polygon(0 66%, 100% 66%, 100% 100%, 0 100%);
+        }
+
+        @keyframes glitch {
+            0%, 100% { transform: none; }
+            5%, 95% { transform: translate(2px, 0) skew(0deg); }
+            10%, 90% { transform: translate(-2px, 0) skew(0deg); }
+            50% { transform: translate(0, 0) skew(3deg); }
+        }
+        @keyframes glitch-left {
+            0%, 100% { transform: none; }
+            5%, 95% { transform: translate(-2px, 0); }
+            10%, 90% { transform: translate(2px, 0); }
+            50% { transform: translate(0, 0) skew(-3deg); }
+        }
+        @keyframes glitch-right {
+            0%, 100% { transform: none; }
+            5%, 95% { transform: translate(2px, 0); }
+            10%, 90% { transform: translate(-2px, 0); }
+            50% { transform: translate(0, 0) skew(3deg); }
+        }
+
+        .content {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .content.visible {
+            opacity: 1;
+        }
+        .text-container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .exp-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+        .exp-card:hover {
+            transform: scale(1.03);
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 6px 16px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            z-index: 10;
+        }
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .exp-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            transition: background 0.3s;
+        }
+        .exp-button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="window.location.href='index.html?planet=jupiter'">Back</button>
+    <div class="absolute top-0 left-0 w-full h-full flex items-center justify-start p-8 content" id="content">
+        <div class="w-full md:w-3/4 flex flex-col items-start space-y-4 text-container">
+            <h1 class="glitch text-5xl" data-text="💼 Experience">💼 Experience</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full text-lg font-['Montserrat'] font-bold text-white">
+                <div class="exp-card">
+                    <p>💡 <strong>Generative AI Intern</strong></p>
+                    <p>Remote Internship | Jan 2025 – Mar 2025</p>
+                    <p>Explored real-world applications of Generative AI with hands-on projects.</p>
+                    <p>Worked on emotion-aware chatbots and creative AI tools using Python & Jupyter.</p>
+                    <p>Learned ethical AI practices, data handling, and ML model deployment.</p>
+                </div>
+                <div class="exp-card">
+                    <p>🧠 <strong>Technical Head – Research & Development Club</strong></p>
+                    <p>Pimpri Chinchwad University, Pune | 2025 – Present</p>
+                    <p>Specialized in frontend development and AI-tool integration.</p>
+                </div>
+                <div class="exp-card">
+                    <p>🧠 <strong>Project Contributor – Techneon Hackathon</strong></p>
+                    <p>Event: Techneon 2025 | Pimpri Chinchwad University</p>
+                    <p>Co-built AceHub, a frontend-based Study Buddy Finder Web App.</p>
+                    <p>Integrated Google Cloud and APIs — no traditional backend used.</p>
+                    <p>Focused on UI/UX, live data handling, and user-centric design.</p>
+                </div>
+                <div class="exp-card">
+                    <p>🌐 <strong>Web Development Hackathon</strong></p>
+                    <p>Event: PCCoE Hackathon | 2024</p>
+                    <p>Developed a complete website within 2 hours under time constraints.</p>
+                    <p>Collaborated on-the-spot ideas, rapid prototyping, and clean UI delivery.</p>
+                    <p>Demonstrated quick thinking and teamwork under high-pressure setting.</p>
+                    <button class="exp-button mt-2" onclick="window.open('https://cresapcu.netlify.app/', '_blank')">Click Here</button>
+                </div>
+                <div class="exp-card">
+                    <p>🧩 <strong>Compiler-Based Game Projects – C Language</strong></p>
+                    <p>Academic & Personal Projects</p>
+                    <p>Created logic-based games using C with file handling and text graphics.</p>
+                    <p>Strengthened understanding of procedural programming concepts.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let rocketImg, characterStand;
+        let rocketX, rocketY;
+        let characterX, characterY;
+        let rocketAnimating = true;
+        let characterWalking = false;
+        let contentVisible = false;
+        let frameCounter = 0;
+
+        function preload() {
+            rocketImg = loadImage('assets/rocket.png');
+            characterStand = loadImage('assets/stand.png');
+        }
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            rocketX = 100;
+            rocketY = -100;
+            characterX = rocketX + 150;
+            characterY = height - 110;
+        }
+
+        function draw() {
+            clear();
+            frameCounter++;
+
+            if (rocketAnimating) {
+                image(rocketImg, rocketX - 150, rocketY - 150, 300, 300);
+                rocketY += 2;
+                if (rocketY >= height - 150) {
+                    rocketAnimating = false;
+                    characterWalking = true;
+                    characterX = rocketX + 150;
+                }
+            } else {
+                image(rocketImg, rocketX - 150, height - 150 - 150, 300, 300);
+            }
+
+            if (characterWalking) {
+                if (characterX < 400) {
+                    characterX += 2;
+                    image(characterStand, characterX - 110, characterY - 110, 220, 220);
+                } else {
+                    characterWalking = false;
+                    if (!contentVisible) {
+                        document.getElementById('content').classList.add('visible');
+                        contentVisible = true;
+                    }
+                }
+            }
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+            characterY = height - 110;
+            if (!rocketAnimating) rocketY = height - 150;
+        }
+    </script>
+</body>
+</html>

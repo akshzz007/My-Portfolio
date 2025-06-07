@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercury - About Me</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            background: url('assets/merc.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            color: white;
+            overflow: hidden;
+        }
+
+        .glitch {
+            position: relative;
+            display: inline-block;
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+            animation: glitch 2s linear infinite;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .glitch::before {
+            color: cyan;
+            animation: glitch-left 2s linear infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+        }
+        .glitch::after {
+            color: magenta;
+            animation: glitch-right 2s linear infinite;
+            clip-path: polygon(0 66%, 100% 66%, 100% 100%, 0 100%);
+        }
+
+        @keyframes glitch {
+            0%, 100% { transform: none; }
+            5%, 95% { transform: translate(2px, 0) skew(0deg); }
+            10%, 90% { transform: translate(-2px, 0) skew(0deg); }
+            50% { transform: translate(0, 0) skew(3deg); }
+        }
+        @keyframes glitch-left {
+            0%, 100% { transform: none; }
+            5%, 95% { transform: translate(-2px, 0); }
+            10%, 90% { transform: translate(2px, 0); }
+            50% { transform: translate(0, 0) skew(-3deg); }
+        }
+        @keyframes glitch-right {
+            0%, 100% { transform: none; }
+            5%, 95% { transform: translate(2px, 0); }
+            10%, 90% { transform: translate(-2px, 0); }
+            50% { transform: translate(0, 0) skew(3deg); }
+        }
+
+        .content {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .content.visible {
+            opacity: 1;
+        }
+        .text-container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .photo-container {
+            perspective: 1000px;
+            transition: all 0.5s ease;
+        }
+
+        .photo-frame {
+            position: relative;
+            width: 360px;
+            height: 450px;
+            padding: 10px;
+            border-radius: 50% / 40%; /* non-standard oval */
+            background: linear-gradient(135deg, #ff6ec4, #7873f5);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            transition: all 0.8s ease-in-out;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50% / 40%;
+            border: 3px solid white;
+            animation: glitchPic 2s steps(2, start) 1;
+        }
+
+        @keyframes glitchPic {
+            0% { transform: translate(0, 0); filter: hue-rotate(0deg) contrast(1); }
+            25% { transform: translate(5px, -5px); filter: hue-rotate(90deg) contrast(1.2); }
+            50% { transform: translate(-5px, 5px); filter: hue-rotate(180deg) contrast(0.8); }
+            75% { transform: translate(5px, 5px); filter: hue-rotate(270deg) contrast(1.5); }
+            100% { transform: translate(0, 0); filter: hue-rotate(0deg) contrast(1); }
+        }
+
+        .photo-container:hover .photo-frame {
+            border-radius: 70% 30% 50% 50% / 50% 60% 40% 50%; /* organic morph */
+            transform: rotate(2deg) scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="absolute top-0 left-0 w-full h-full flex items-center justify-between p-8 content" id="content">
+        <div class="w-2/3 flex flex-col items-start space-y-4 text-container">
+            <h1 class="glitch text-5xl" data-text="Akshra Singh">Akshra Singh</h1>
+            <h2 class="glitch text-2xl" data-text="Computer Science Student (Web Developer)">Computer Science Student (Web Developer)</h2>
+            <p class="text-lg font-['Montserrat'] font-bold max-w-2xl leading-relaxed text-white">
+               I’m a curious mind with a creative approach to solving real-world problems. For me, technology isn’t just about lines of code — it’s about understanding people, designing meaningful experiences, and building with purpose.<br><br>
+                I enjoy exploring the “why” behind things just as much as the “how.” Whether I’m working on a web interface, an emotion-based application, or a small creative experiment, I try to bring clarity, empathy, and intention to whatever I do.<br><br>
+                I believe in continuous learning, in asking questions that don’t always have immediate answers, and in staying open to the unknown. My work is a reflection of both my technical curiosity and my desire to make things that matter — to me and to others.<br><br>
+                This portfolio isn’t just a collection of skills; it’s a glimpse into how I think, how I build, and how I grow. I’m still evolving — and that’s exactly the journey I’m proud to share.
+            </p>
+        </div>
+        <div class="w-1/3 flex justify-center photo-container">
+            <div class="photo-frame">
+                <img id="akshra-photo" src="assets/akshra.jpg" alt="Akshra Singh">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let rocketImg, characterStand;
+        let rocketX, rocketY;
+        let characterX, characterY;
+        let rocketAnimating = true;
+        let characterWalking = false;
+        let contentVisible = false;
+        let frameCounter = 0;
+
+        function preload() {
+            rocketImg = loadImage('assets/rocket.png');
+            characterStand = loadImage('assets/stand.png');
+        }
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            rocketX = 100;
+            rocketY = -100;
+            characterX = rocketX + 150;
+            characterY = height - 110;
+        }
+
+        function draw() {
+            clear();
+            frameCounter++;
+
+            if (rocketAnimating) {
+                image(rocketImg, rocketX - 150, rocketY - 150, 300, 300);
+                rocketY += 2;
+                if (rocketY >= height - 150) {
+                    rocketAnimating = false;
+                    characterWalking = true;
+                    characterX = rocketX + 150;
+                }
+            } else {
+                image(rocketImg, rocketX - 150, height - 150 - 150, 300, 300);
+            }
+
+            if (characterWalking) {
+                if (characterX < 400) {
+                    characterX += 2;
+                    image(characterStand, characterX - 110, characterY - 110, 220, 220);
+                } else {
+                    characterWalking = false;
+                    if (!contentVisible) {
+                        document.getElementById('content').classList.add('visible');
+                        contentVisible = true;
+                    }
+                }
+            }
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+            characterY = height - 110;
+            if (!rocketAnimating) rocketY = height - 150;
+        }
+    </script>
+</body>
+</html>

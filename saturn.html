@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saturn - Certifications</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            background: url('assets/saturn.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            color: white;
+            overflow: hidden;
+        }
+
+        .glitch {
+            position: relative;
+            display: inline-block;
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+            animation: glitch 2s linear infinite;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .glitch::before {
+            color: cyan;
+            animation: glitch-left 2s linear infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+        }
+        .glitch::after {
+            color: magenta;
+            animation: glitch-right 2s linear infinite;
+            clip-path: polygon(0 66%, 100% 66%, 100% 100%, 0 100%);
+        }
+
+        @keyframes glitch {
+            0%, 100% { transform: none; }
+            5%, 95% { transform: translate(2px, 0) skew(0deg); }
+            10%, 90% { transform: translate(-2px, 0) skew(0deg); }
+            50% { transform: translate(0, 0) skew(3deg); }
+        }
+        @keyframes glitch-left {
+            0%, 100% { transform: none; }
+            5%, 95% { transform: translate(-2px, 0); }
+            10%, 90% { transform: translate(2px, 0); }
+            50% { transform: translate(0, 0) skew(-3deg); }
+        }
+        @keyframes glitch-right {
+            0%, 100% { transform: none; }
+            5%, 95% { transform: translate(2px, 0); }
+            10%, 90% { transform: translate(-2px, 0); }
+            50% { transform: translate(0, 0) skew(3deg); }
+        }
+
+        .content {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .content.visible {
+            opacity: 1;
+        }
+        .text-container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .cert-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+        .cert-card:hover {
+            transform: scale(1.03);
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 6px 16px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            z-index: 10;
+        }
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .cert-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            transition: background 0.3s;
+        }
+        .cert-button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="window.location.href='index.html?planet=saturn'">Back</button>
+    <div class="absolute top-0 left-0 w-full h-full flex items-center justify-start p-8 content" id="content">
+        <div class="w-full md:w-3/4 flex flex-col items-start space-y-4 text-container">
+            <h1 class="glitch text-5xl" data-text="🏅 Certifications">🏅 Certifications</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full text-lg font-['Montserrat'] font-bold text-white">
+                <div class="cert-card">
+                    <p>🌐 <strong>Introduction to Internet of Things</strong></p>
+                    <p>Institution: Indian Institute of Technology, Bombay</p>
+                    <p>Issued: May 2025</p>
+                    <p>Skills: Internet of Things (IoT)</p>
+                    <button class="cert-button mt-2" onclick="window.open('https://www.coursera.org/account/accomplishments/verify/ATH7Y4GLBPEM', '_blank')">Click Here</button>
+                </div>
+                <div class="cert-card">
+                    <p>🧠 <strong>Certificate for Completion of C++ Training</strong></p>
+                    <p>Institution: Indian Institute of Technology, Bombay</p>
+                    <p>Issued: March 2025</p>
+                    <p>Skills: C++ score-80% (image attached to LinkedIn)</p>
+                </div>
+                <div class="cert-card">
+                    <p>💻 <strong>Programming with C++</strong></p>
+                    <p>Platform: Simplilearn</p>
+                    <p>Issued: February 2025</p>
+                    <p>Credential ID: EYVZESTXO5W4</p>
+                    <p>Skills: C++</p>
+                    <button class="cert-button mt-2" onclick="window.open('https://www.coursera.org/account/accomplishments/verify/EYVZESTXO5W4', '_blank')">Click Here</button>
+                </div>
+                <div class="cert-card">
+                    <p>🤖 <strong>AI: Transformative Learning with TechSaksham</strong></p>
+                    <p>Role: Generative AI Intern</p>
+                    <p>Institution: AICTE</p>
+                    <p>Issued: January 2025</p>
+                    <p>Credential ID: STU676cee01489a41735192065</p>
+                    <p>Skills: Generative AI, Python, Jupyter Notebook, AI Concepts</p>
+                    <button class="cert-button mt-2" onclick="window.open('https://techsaksham.org/verify-aicte-certificate/TSPIN24_618204', '_blank')">Click Here</button>
+                </div>
+                <div class="cert-card">
+                    <p>☁️ <strong>Microsoft Certified: Azure Fundamentals</strong></p>
+                    <p>Institution: Microsoft</p>
+                    <p>Issued: January 2025</p>
+                    <p>Skills: Microsoft Azure, Cloud Basics</p>
+                    <button class="cert-button mt-2" onclick="window.open('https://www.simplilearn.com/skillup-certificate-landing?token=eyJjb3Vyc2VfaWQiOiIxNzI4IiwiY2VydGlmaWNhdGVfdXJsIjoiaHR0cHM6XC9cL2NlcnRpZmljYXRlcy5zaW1wbGljZG4ubmV0XC9zaGFyZVwvNzgzMTU1Ml83NDQ3NzUzMTczODA4ODExNjYyNC5wbmciLCJ1c2VybmFtZSI6IkFrc2hyYSBTaW5naCJ9&referrer=https%3A%2F%2Flms.simplilearn.com%2Fcourses%2F4225%2FAzure-Fundamentals%2Fcertificate%2Fdownload-skillup&%24web_only=true', '_blank')">Click Here</button>
+                </div>
+                <div class="cert-card">
+                    <p>🛡️ <strong>Introduction to Digital Transformation with Google Cloud</strong></p>
+                    <p>Platform: Google Cloud Security</p>
+                    <p>Issued: December 2024</p>
+                    <p>Skills: Digital Transformation, Cloud Fundamentals</p>
+                    <button class="cert-button mt-2" onclick="window.open('https://www.simplilearn.com/skillup-certificate-landing?token=eyJjb3Vyc2VfaWQiOiIzNjg5IiwiY2VydGlmaWNhdGVfdXJsIjoiaHR0cHM6XC9cL2NlcnRpZmljYXRlcy5zaW1wbGljZG4ubmV0XC9zaGFyZVwvNzcwNzQ5NV83NDQ3NzUzMTczNTEyMzE4ODEwNy5wbmciLCJ1c2VybmFtZSI6IkFrc2hyYSBTaW5naCJ9&referrer=https%3A%2F%2Fcertificates.simplicdn.net%2Fshare%2F7707495_74477531735123188107.png', '_blank')">Click Here</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let rocketImg, characterStand;
+        let rocketX, rocketY;
+        let characterX, characterY;
+        let rocketAnimating = true;
+        let characterWalking = false;
+        let contentVisible = false;
+        let frameCounter = 0;
+
+        function preload() {
+            rocketImg = loadImage('assets/rocket.png');
+            characterStand = loadImage('assets/stand.png');
+        }
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            rocketX = 100;
+            rocketY = -100;
+            characterX = rocketX + 150;
+            characterY = height - 110;
+        }
+
+        function draw() {
+            clear();
+            frameCounter++;
+
+            if (rocketAnimating) {
+                image(rocketImg, rocketX - 150, rocketY - 150, 300, 300);
+                rocketY += 2;
+                if (rocketY >= height - 150) {
+                    rocketAnimating = false;
+                    characterWalking = true;
+                    characterX = rocketX + 150;
+                }
+            } else {
+                image(rocketImg, rocketX - 150, height - 150 - 150, 300, 300);
+            }
+
+            if (characterWalking) {
+                if (characterX < 400) {
+                    characterX += 2;
+                    image(characterStand, characterX - 110, characterY - 110, 220, 220);
+                } else {
+                    characterWalking = false;
+                    if (!contentVisible) {
+                        document.getElementById('content').classList.add('visible');
+                        contentVisible = true;
+                    }
+                }
+            }
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+            characterY = height - 110;
+            if (!rocketAnimating) rocketY = height - 150;
+        }
+    </script>
+</body>
+</html>

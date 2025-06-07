@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venus - My Journey</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            overflow-x: hidden;
+            font-family: 'Comic Neue', cursive;
+        }
+        canvas {
+            display: block;
+        }
+        #controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            gap: 40px;
+        }
+        #controls button {
+            padding: 10px;
+            font-size: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+        #controls button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        .info-text {
+            position: absolute;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9);
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            text-align: center;
+            z-index: 5;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 8px 12px;
+            border-radius: 10px;
+            max-width: 300px;
+        }
+        .info-text.visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <button onclick="moveBackward()">◀</button>
+        <button onclick="moveForward()">▶</button>
+    </div>
+
+    <script>
+        let backgroundImg, rocketImg, characterStand, characterWalk1, characterWalk2, characterWalk3, characterStandLeft, characterWalkLeft1, characterWalkLeft2;
+        let schoolImg, school2Img, pyramidImg, bigPyramidImg, collegeImg;
+        let rocketX, rocketY;
+        let characterX, characterY;
+        let rocketAnimating = true;
+        let currentStage = 0;
+        let cameraX = 0;
+        let targetCameraX = 0;
+        let worldWidth = 6000;
+        let stageDistance = 567; // Adjusted to ~15 cm (567 pixels)
+        let facingRight = true;
+        let frameCounter = 0;
+        let walkFrame = 0;
+        let walkCounter = 0;
+        let stages = [
+            { x: 100 + stageDistance, img: 'schoolImg', text: 'went to Pioneer Public School, Balrampur\nclass Nursery-4 (CBSE)', elementId: 'info-text-0', visited: false, scale: 1 },
+            { x: 100 + stageDistance * 2, img: 'school2Img', text: 'went to Jesus and Mary School, Balrampur\nclass 5-12 (ICSE/ISC)', elementId: 'info-text-1', visited: false, scale: 1 },
+            { x: 100 + stageDistance * 3, img: 'pyramidImg', text: 'class 10 (ICSE)\n80.6%', elementId: 'info-text-2', visited: false, scale: 1 },
+            { x: 100 + stageDistance * 4, img: 'bigPyramidImg', text: 'class 12 (ISC)\n82.25% (top 4 subject)\n80.4% (overall)', elementId: 'info-text-3', visited: false, scale: 1.2 },
+            { x: 100 + stageDistance * 5, img: 'collegeImg', text: 'joined PCU in 2024 (BTech in CSE - current)', elementId: 'info-text-4', visited: false, scale: 1 }
+        ];
+        let targetX = stages[0].x;
+
+        function preload() {
+            backgroundImg = loadImage('assets/ven.jpg');
+            rocketImg = loadImage('assets/rocket.png');
+            characterStand = loadImage('assets/stand.png');
+            characterWalk1 = loadImage('assets/walking.png');
+            characterWalk2 = loadImage('assets/knee.png');
+            characterWalk3 = loadImage('assets/stand.png');
+            characterStandLeft = loadImage('assets/lat1.png');
+            characterWalkLeft1 = loadImage('assets/lat2.png');
+            characterWalkLeft2 = loadImage('assets/lat3.png');
+            schoolImg = loadImage('assets/school.png');
+            school2Img = loadImage('assets/school2.png');
+            pyramidImg = loadImage('assets/pyramid.png');
+            bigPyramidImg = loadImage('assets/pyramid.png');
+            collegeImg = loadImage('assets/college.png');
+        }
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            rocketX = 100;
+            rocketY = -100;
+            characterX = rocketX + 150;
+            characterY = height - 110;
+
+            stages.forEach((stage, i) => {
+                let div = document.createElement('div');
+                div.id = stage.elementId;
+                div.className = 'info-text';
+                div.textContent = stage.text;
+                document.body.appendChild(div);
+            });
+        }
+
+        function draw() {
+            frameCounter++;
+            targetCameraX = constrain(characterX - width / 2, 0, worldWidth - width);
+            cameraX = lerp(cameraX, targetCameraX, 0.1);
+
+            let bgWidth = 1920;
+            let bgHeight = 1080;
+            let scaleFactor = max(width / bgWidth, height / bgHeight);
+            if (backgroundImg) {
+                push();
+                resetMatrix();
+                image(backgroundImg, 0, 0, bgWidth * scaleFactor, bgHeight * scaleFactor);
+                pop();
+            } else {
+                fill(0);
+                rect(0, 0, width, height);
+            }
+
+            translate(-cameraX, 0);
+
+            let baseY = height - 300;
+            stages.forEach((stage, i) => {
+                let img = eval(stage.img);
+                let scale = stage.scale;
+                if (stage.visited && scale < 1.3) {
+                    stage.scale = lerp(stage.scale, 1.3, 0.05);
+                    scale = stage.scale;
+                }
+                let imgX = stage.x - 125 * scale;
+                let imgY = baseY - 230 * scale / 2 - 40;
+                let imgW = 250 * scale;
+                let imgH = 250 * scale;
+                image(img, imgX, imgY, imgW, imgH);
+
+                let infoText = document.getElementById(stage.elementId);
+                if (stage.visited) {
+                    infoText.classList.add('visible');
+                    infoText.style.left = `${stage.x - cameraX - 150}px`;
+                    infoText.style.top = `${imgY - 80}px`;
+                }
+            });
+
+            if (rocketAnimating) {
+                image(rocketImg, rocketX - 150, rocketY - 150, 300, 300);
+                rocketY += 4;
+                if (rocketY >= height - 150) {
+                    rocketAnimating = false;
+                    targetX = stages[0].x;
+                }
+            } else {
+                image(rocketImg, rocketX - 150, height - 300, 300, 300);
+                let speed = 1.5;
+                if (Math.abs(characterX - targetX) > speed) {
+                    characterX += characterX < targetX ? speed : -speed;
+                    facingRight = characterX < targetX;
+                    walkCounter++;
+                    if (walkCounter % 10 === 0) {
+                        walkFrame = (walkFrame + 1) % 3;
+                    }
+                    let walkImages = facingRight ? [characterWalk1, characterWalk2, characterWalk3] : [characterWalkLeft1, characterWalkLeft2, characterStandLeft];
+                    image(walkImages[walkFrame], characterX - 110, characterY - 110, 220, 220);
+                } else {
+                    image(facingRight ? characterStand : characterStandLeft, characterX - 110, characterY - 110, 220, 220);
+                    stages[currentStage].visited = true;
+                }
+            }
+        }
+
+        function moveForward() {
+            if (!rocketAnimating) {
+                currentStage = (currentStage + 1) % stages.length;
+                targetX = stages[currentStage].x;
+                if (currentStage === 0) {
+                    stages.forEach(stage => {
+                        stage.visited = false;
+                        stage.scale = stage.img === 'bigPyramidImg' ? 1.2 : 1;
+                    });
+                }
+            }
+        }
+
+        function moveBackward() {
+            if (!rocketAnimating) {
+                currentStage = (currentStage - 1 + stages.length) % stages.length;
+                targetX = stages[currentStage].x;
+                if (currentStage === stages.length - 1) {
+                    stages.forEach(stage => {
+                        stage.visited = false;
+                        stage.scale = stage.img === 'bigPyramidImg' ? 1.2 : 1;
+                    });
+                }
+            }
+        }
+
+        function keyPressed() {
+            if (keyCode === RIGHT_ARROW && !rocketAnimating) {
+                moveForward();
+            } else if (keyCode === LEFT_ARROW && !rocketAnimating) {
+                moveBackward();
+            }
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+            characterY = height - 110;
+            if (!rocketAnimating) rocketY = height - 150;
+        }
+    </script>
+</body>
+</html>

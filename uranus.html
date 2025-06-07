@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uranus - Achievements</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            background: url('assets/uranus.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            color: white;
+            overflow: hidden;
+        }
+
+        .glitch {
+            position: relative;
+            display: inline-block;
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+            animation: glitch 2s linear infinite;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .glitch::before {
+            color: cyan;
+            animation: glitch-left 2s linear infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+        }
+        .glitch::after {
+            color: magenta;
+            animation: glitch-right 2s linear infinite;
+            clip-path: polygon(0 66%, 100% 66%, 100% 100%, 0 100%);
+        }
+
+        @keyframes glitch {
+            0%, 100% { transform: none; }
+            5%, 95% { transform: translate(2px, 0) skew(0deg); }
+            10%, 90% { transform: translate(-2px, 0) skew(0deg); }
+            50% { transform: translate(0, 0) skew(3deg); }
+        }
+        @keyframes glitch-left {
+            0%, 100% { transform: none; }
+            5%, 95% { transform: translate(-2px, 0); }
+            10%, 90% { transform: translate(2px, 0); }
+            50% { transform: translate(0, 0) skew(-3deg); }
+        }
+        @keyframes glitch-right {
+            0%, 100% { transform: none; }
+            5%, 95% { transform: translate(2px, 0); }
+            10%, 90% { transform: translate(-2px, 0); }
+            50% { transform: translate(0, 0) skew(3deg); }
+        }
+
+        .content {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .content.visible {
+            opacity: 1;
+        }
+        .text-container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .achieve-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+        .achieve-card:hover {
+            transform: scale(1.03);
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 6px 16px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            z-index: 10;
+        }
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="window.location.href='index.html?planet=uranus'">Back</button>
+    <div class="absolute top-0 left-0 w-full h-full flex items-center justify-start p-8 content" id="content">
+        <div class="w-full md:w-3/4 flex flex-col items-start space-y-4 text-container">
+            <h1 class="glitch text-5xl" data-text="🏆 Achievements">🏆 Achievements</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full text-lg font-['Montserrat'] font-bold text-white">
+                <div class="achieve-card">
+                    <p>💼 <strong>Selected for Multiple Internship Offers (2025)</strong></p>
+                    <p>Actively applied and received multiple internship offers across AI, frontend, and software development roles.</p>
+                </div>
+                <div class="achieve-card">
+                    <p>🤖 <strong>Internship in Generative AI – TechSaksham Program by AICTE</strong></p>
+                    <p>Worked on real-world AI use-cases involving generative models, Python, and Jupyter Notebooks.</p>
+                </div>
+                <div class="achieve-card">
+                    <p>🔜 <strong>Upcoming Internship (2025)</strong></p>
+                    <p>Final-stage discussions for second internship in AI/Frontend, expected to begin soon.</p>
+                </div>
+                <div class="achieve-card">
+                    <p>🧠 <strong>Technical Head – Research & Development Club, Pimpri Chinchwad University</strong></p>
+                    <p>Led club activities, organized events, and guided project teams.</p>
+                </div>
+                <div class="achieve-card">
+                    <p>🏆 <strong>Techneon 2025 Winner – Project: AceHub (Study Buddy Finder)</strong></p>
+                    <p>Recognized for innovative idea built with Google Cloud and APIs, enabling peer collaboration.</p>
+                </div>
+                <div class="achieve-card">
+                    <p>🧠 <strong>Built Mental Health Bot Web App</strong></p>
+                    <p>Integrated emotion detection (Teachable Machine), chatbot (Botpress), games, music, and wellness tools in a full-screen UI.</p>
+                </div>
+                <div class="achieve-card">
+                    <p>🎮 <strong>Game Developer – Shooting Game & C-based Compiler Logic Games</strong></p>
+                    <p>Developed using HTML, CSS, JavaScript & C — focused on logic, gameplay design, and responsiveness.</p>
+                </div>
+                <div class="achieve-card">
+                    <p>📜 <strong>Certified by IIT Bombay, Microsoft, Google & AICTE</strong></p>
+                    <p>Completed IoT, Azure, Digital Transformation, and C++ certifications, showing expertise in industry-demanded skills.</p>
+                </div>
+                <div class="achieve-card">
+                    <p>🏅 <strong>Leadership in School – House Captain & Subject Presentation Lead</strong></p>
+                    <p>Led team events, organized presentations, and represented the house in competitions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let rocketImg, characterStand;
+        let rocketX, rocketY;
+        let characterX, characterY;
+        let rocketAnimating = true;
+        let characterWalking = false;
+        let contentVisible = false;
+        let frameCounter = 0;
+
+        function preload() {
+            rocketImg = loadImage('assets/rocket.png');
+            characterStand = loadImage('assets/stand.png');
+        }
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            rocketX = 100;
+            rocketY = -100;
+            characterX = rocketX + 150;
+            characterY = height - 110;
+        }
+
+        function draw() {
+            clear();
+            frameCounter++;
+
+            if (rocketAnimating) {
+                image(rocketImg, rocketX - 150, rocketY - 150, 300, 300);
+                rocketY += 2;
+                if (rocketY >= height - 150) {
+                    rocketAnimating = false;
+                    characterWalking = true;
+                    characterX = rocketX + 150;
+                }
+            } else {
+                image(rocketImg, rocketX - 150, height - 150 - 150, 300, 300);
+            }
+
+            if (characterWalking) {
+                if (characterX < 400) {
+                    characterX += 2;
+                    image(characterStand, characterX - 110, characterY - 110, 220, 220);
+                } else {
+                    characterWalking = false;
+                    if (!contentVisible) {
+                        document.getElementById('content').classList.add('visible');
+                        contentVisible = true;
+                    }
+                }
+            }
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+            characterY = height - 110;
+            if (!rocketAnimating) rocketY = height - 150;
+        }
+    </script>
+</body>
+</html>

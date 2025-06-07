@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Akshra's Space Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            background: url('assets/welcome.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: white;
+            font-family: 'Chewy', cursive;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        h1 {
+            font-size: clamp(24px, 5vw, 36px);
+            margin: 0 0 20px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        button {
+            padding: 15px 30px;
+            font-size: clamp(18px, 4vw, 24px);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            font-family: 'Chewy', cursive;
+        }
+        button:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: clamp(20px, 4vw, 28px);
+            }
+            button {
+                padding: 10px 20px;
+                font-size: clamp(16px, 3vw, 20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome aboard! I’m Akshra Singh, and this is my space themed portfolio. From coding constellations to creative planets ... let’s journey through my galaxy of skills and projects!</h1>
+    <button onclick="window.location.href='home.html'">Explore Now</button>
+</body>
+</html>
