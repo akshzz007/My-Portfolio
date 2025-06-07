@@ -169,7 +169,7 @@
 
             if (rocketAnimating) {
                 image(rocketImg, rocketX - 150, rocketY - 150, 300, 300);
-                rocketY += 4;
+                rocketY += 6; // Increased speed from 4 to 6
                 if (rocketY >= height - 150) {
                     rocketAnimating = false;
                     targetX = stages[0].x;
